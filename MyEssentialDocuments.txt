@@ -1,0 +1,1309 @@
+Service.tc:
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import Swal from 'sweetalert2';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SharedVariablesService {
+  addNewInvestorBankDetailsVerifiedSuccess:boolean = false;
+  addNewInvestorBankDetails = {};
+  addNewInvestorPan = '';
+  addNewInvestorJh1Pan = '';
+  addNewInvestorJh2Pan = '';
+  applicantTaxStatusCode = '';
+  loginTypes ='';
+  registerType ='';
+  arnCode = '';
+  pause = false;
+  panNumber = '';
+  euinCode = '';
+  riaCode = '';
+  ceaseDate='';
+  reportsTabNavigationSelector = 0;
+  transactionHistroyTabNavigationSelector = 0;
+  optionForGenerate = '';
+  investorType = '';
+  transactionFilterType = '';
+  distributorDetails: any = {};
+  distributorDetailsForOtpCard: any = {};
+  registrationDetailsInfo = {}
+  LoginDetailsInfo = {}
+  investorAprrovalDistributorDetails: any = {};
+  isWithInvestorKycVerified = false;
+  isAlongSideWithInvestor = '';
+  isSendlinkToInvestorSuccess = false;
+  isVideoKyc = false;
+  isViewEkycStatus = false;
+  isSmsRedirection = false;
+  generatePopupVisibility=false;
+  ekycInvestorDetails: any = {};
+  public refreshNomineeHeader = new BehaviorSubject<any>('');
+  //report
+  public subFundName = new BehaviorSubject<any>('')
+  public generatePopUp = new BehaviorSubject<any>(false)
+
+
+  //ekyc
+  public selectedEkycTransaction: BehaviorSubject<any> = new BehaviorSubject<any>(false);
+  investorKycDetails: any = {};
+  camsResponseEkycTpe = '';
+  ekycInvestorApprovalDetails: any = {};
+  ekycParmsDetails = {};
+  ekycErrorDes = '';
+  invDetFromInitiate = {};
+  EkycInvestorApprovalParmsResponse = new BehaviorSubject<any>(null);
+  newuser = false;
+  firstLogin = false;
+  ifscvalidation = false;
+  paramsList: any = {};
+  isKycInProcess = new BehaviorSubject<any>(false);
+  isKycAlreadyVerified = new BehaviorSubject<any>(false);
+
+  portFolioAssetTypeDetails$ = new BehaviorSubject<any>(null);
+  nudgesList$ = new BehaviorSubject<any>(null);
+  selectedNudge$ = '';
+  nudgesTransactionType$ = '';
+  primaryApplicantTaxResidentOtherthanIndia$ : any;
+  secondaryApplicantTaxResidentOtherthanIndia$ : any;
+  tertiaryApplicantTaxResidentOtherthanIndia$ : any;
+
+  private previousUrl: BehaviorSubject<string> = new BehaviorSubject<any>(null);
+  public previousUrl$: Observable<string> = this.previousUrl.asObservable();
+
+  private currentUrl: BehaviorSubject<string> = new BehaviorSubject<any>(null);
+  public currentUrl$: Observable<string> = this.currentUrl.asObservable();
+
+  folioDetailsforPanAadhaarseedingIdcwChange$ = new BehaviorSubject<any>(null);
+
+  //dummy
+
+  isDummy$ = new BehaviorSubject<any>(false);
+  // investorAprrovalDistributorDetails$ = new BehaviorSubject<any>({});      // store the bank account details
+
+  empanelmentSelectedKydBankAccIndex$ = new BehaviorSubject<number>(0);
+  empanelmentNomineeDetails$ = new BehaviorSubject<any>({});
+  empanelmentBanksDetials$ = new BehaviorSubject<any>([]); // store the bank account details
+  incompleteBanksDetials$ = new BehaviorSubject<boolean>(false);
+  isSecondBankAdded = false;
+  isflagAddNewAccount = 0;
+  nomineeRelation = [];
+  linkPanAadhaarUrl = 'https://eportal.incometax.gov.in/iec/foservices/#/pre-login/bl-link-aadhaar';
+  transactionTypeData = {
+    lumpsumFresh : {trxnMode:'FT', trxnType:'FP'}, // fresh
+    lumpsumAdditional : {trxnMode:'FT', trxnType:'AP'}, //additional purchase
+    sip : {trxnMode:'FT', trxnType:'SIP'},
+    switch : {trxnMode:'FT', trxnType:'S'},
+    redemption : {trxnMode:'FT', trxnType:'R'},
+    instaredemption : {trxnMode:'FT', trxnType:'R'},
+    swp : {trxnMode:'FT', trxnType:'SWP'},
+    stp : {trxnMode:'FT', trxnType:'STP'},
+    idcw : {trxnMode:'NFT', trxnType:'DTP'}, //Transmission
+    changeIDCW : {trxnMode:'NFT', trxnType:'COD'},
+    createFolio : {trxnMode:'FT', trxnType:'Prospect'},
+    updateBank : {trxnMode:'NFT', trxnType:'COM'},
+    updateNominee : {trxnMode:'NFT', trxnType:'NOM'},
+    updateEmail : {trxnMode:'NFT', trxnType:'COC'},
+    updateMobile : {trxnMode:'NFT', trxnType:'COC'}
+  }
+  investorDetails$ = new BehaviorSubject<any>(null);
+  folioDetails$ = new BehaviorSubject<any>(null);
+
+  aadhaarSeedingFolioDetails$ = new BehaviorSubject<any>(null);
+  profileDetails = new BehaviorSubject<any>({ data: {} });
+  allInitiateSuccessTime :any;
+
+  transactionType = '';
+  cartInitiateReference = '';
+  approvalReferenceNo = '';
+  encryptedReferenceNo = '';
+  familyGenOtpReferenceNumber = '';
+  schemaParam = '';
+  investorOtpEmail = '';
+  investorOtpMobile = '';
+  distributorOtpEmail = '';
+  distributorOtpMobile = '';
+  selectedAumItem = new BehaviorSubject<any>(null);
+  sipOverviewDetails = new BehaviorSubject<any>(null);
+  isMultipleScheme = false;
+  isNonTransactionApproval = false;
+  transactionList$ = new BehaviorSubject<any>(null);
+  multiSchemeList = new BehaviorSubject<any>(null);
+  multiSchemeItem = new BehaviorSubject<any>(null);
+  transactionDetails$ = new BehaviorSubject<any>(null);
+  familyArnDetails$ = new BehaviorSubject<any>(null);
+
+  emandateDetails$ = new BehaviorSubject<any>(null);
+  editSchemeMode$ = new BehaviorSubject(false);
+  upiTimerTrigger = new BehaviorSubject<any>(null);
+  lumpsumBankDetails$ = new BehaviorSubject<any>(null);
+  sipBankDetails$ = new BehaviorSubject<any>(null);
+  firstInstallmentBankDetails$ = new BehaviorSubject<any>(null);
+  ARNDetails = new BehaviorSubject<any>(null);
+  investorPortfolioDetails$ = new BehaviorSubject<any>(null);
+  idcwTransactionDetails$ = new BehaviorSubject<any>(null);
+  isBackButtonClicked = new BehaviorSubject<boolean>(false);
+  bsAumTypeDetails = new BehaviorSubject<any>({ aumType: null, amtVal: null });
+
+errormsg = '';
+errormsgLink = '';
+errormsg1='';
+  Cotab_name = 'Products'
+  Coproduct_name = ''
+  Cogreeting_name = ''
+  Comedia = ''
+  schemeCode=null;
+  count = 0;
+  bsAumSchemeDetails = new BehaviorSubject<any>(null);
+  isAddNewInvetor = false;
+  chequeUploadID : any = '';
+  isChequeUpload = false;
+  esignId = '';
+  isIfscModel = false;
+  editLogo = false;
+  restartSip = false;
+  doItLatter = false;
+  removeLogo = false;
+  fromHomeGreet = false;
+  ifscBankName = '';
+  fromSms = false;
+  isStateCall = false;
+  selectedIFSCDetails: any = {};
+  IsInvestorPan:any=null;
+  myInvestorHeaderTitle$ = new BehaviorSubject<any>({ title: null });
+
+
+  // pradeep start
+  private referenceNumber = new BehaviorSubject<Reference>({ reference: null });
+  private selectedLumpsBank = new BehaviorSubject<Lums>({ accno: null });
+  private selectedSIPBank = new BehaviorSubject<Sip>({ accno: null });
+  private selectedUINReview = new BehaviorSubject<Uin>({
+    uinno: null,
+    subBroker: null,
+  });
+  private paymentCheckIn = new BehaviorSubject<Payment>({
+    payment: null,
+    checkIn: false,
+  });
+  private sipLumpsPayment = new BehaviorSubject<Slpayment>({
+    lumps: 'NET_BANKING',
+    sip: 'ISIP',
+  });
+  private fullFormShow = new BehaviorSubject<FullForm>({ showForm: true });
+
+  private setSipPaymentType = new BehaviorSubject<PaymentOption>({ type: '' });
+  private setLumpsPaymentType = new BehaviorSubject<PaymentOption>({
+    type: '',
+  });
+
+  private stpFormData = new BehaviorSubject<Stp>({ data: {} });
+  private swpFormData = new BehaviorSubject<Swp>({ data: {} });
+  private eMandateDetails = new BehaviorSubject<mandate>({ data: {} });
+  private eMandateApprovedDetails = new BehaviorSubject<mandate>({ data: {} });
+
+  private redeemFomData = new BehaviorSubject<Redeem>({ data: {} });
+  private switchFormData = new BehaviorSubject<Switch>({ data: {} });
+  private setProfileUrl = new BehaviorSubject<Status>({ status: '' });
+
+  //Todo: Add New Investor
+  private addNewInvestorData = new BehaviorSubject<addInvestor>({ data: {} });
+  private addSecInvestorData = new BehaviorSubject<addInvestor>({ data: {} });
+  private addtertiaryInvestorData = new BehaviorSubject<addInvestor>({
+    data: {},
+  });
+
+  public taxResidentCountryApplicant1 = new BehaviorSubject<any[]>([]);
+  public taxResidentCountryApplicant2 = new BehaviorSubject<any[]>([]);
+  public taxResidentCountryApplicant3 = new BehaviorSubject<any[]>([]);
+
+  //Todo: Add New Nominee
+  private addNomineeData = new BehaviorSubject<addNominee>({ data: {} });
+  private addNomineeData2 = new BehaviorSubject<addNominee>({ data: {} });
+  private addNomineeData3 = new BehaviorSubject<addNominee>({ data: {} });
+  private addInvestorbankDetails = new BehaviorSubject<bankDetails>({
+    data: {},
+  });
+  getAddNewInvestorDetails$ = new BehaviorSubject<any>(null);
+
+  private setTransactionType = new BehaviorSubject<any>({
+    TransactionType: '',
+  });
+
+  public activePlan: BehaviorSubject<any> = new BehaviorSubject<any>('SIP');
+  public initiateNCTtransaction = new Subject();
+  public transactionDataOfNCT = new BehaviorSubject<any>(null);
+  public backButtonClickedForNCT = new BehaviorSubject<any>(null);
+  public selectedFoliosWithSameEmailOrMobile = new BehaviorSubject<any>(null);
+  public setUploadChequeId = new BehaviorSubject<any>(null);
+  resetScheme$ = new BehaviorSubject<boolean | null>(null);
+
+  public refDetails: BehaviorSubject<any> = new BehaviorSubject<any>('');
+
+  public planDetails: BehaviorSubject<any> = new BehaviorSubject<any>('SIP');
+  public pauseDuration: BehaviorSubject<any> = new BehaviorSubject<any>(
+    'ONE_MONTH'
+  );
+  widgetUiDetails$ = new BehaviorSubject<any>(null);
+  public euinRegistraion: BehaviorSubject<any> = new BehaviorSubject<any>("");
+  public cobradedSelectedItem: BehaviorSubject<any> = new BehaviorSubject<any>({ body: {} })
+  public riseComplaintRef: BehaviorSubject<any> = new BehaviorSubject<any>("");
+  public distributorhelpRef: BehaviorSubject<any> = new BehaviorSubject<any>("");
+  public validKydBankdetailsFlag: BehaviorSubject<any> = new BehaviorSubject<boolean>(true);
+  public isEkycGenOtpClicked: BehaviorSubject<any> = new BehaviorSubject<boolean>(false);
+  public isCommissionStatement: BehaviorSubject<any> = new BehaviorSubject<boolean>(true);
+  public generateLinkResp: BehaviorSubject<any> = new BehaviorSubject<any>({ body: {} })
+  public isEkycInvestorGenOtpClicked: BehaviorSubject<any> = new BehaviorSubject<boolean>(false);
+  public currentMediumIncobrand: BehaviorSubject<any> = new BehaviorSubject<any>("");
+  public selectedEkyc: BehaviorSubject<any> = new BehaviorSubject<any>('false');
+  public idcwChangeData: BehaviorSubject<any> = new BehaviorSubject<any>({ body: {} });
+  public restartsipdata: BehaviorSubject<any> = new BehaviorSubject<any>("");
+  public topNotchData: BehaviorSubject<any> = new BehaviorSubject<any>("");
+  idcwBack = false;
+  hideLumpsumForSmallCapFund = false;
+
+  private prospectFolioList = new BehaviorSubject<ProspectFolio>({ data: [] });
+  searchedStatementTab=null;
+  setTopNocthData(data: any) {
+    this.topNotchData.next(data);
+  }
+  getTopNocthData() {
+    return this.topNotchData.asObservable();
+  }
+  setRestartSIPData(data: any) {
+    this.restartsipdata.next(data);
+  }
+  getRestartSIPData() {
+    return this.restartsipdata.asObservable();
+  }
+  setIdcwChangeData(data: any) {
+    this.idcwChangeData.next(data);
+  }
+
+  getIdcwChangeData() {
+    return this.idcwChangeData.asObservable();
+  }
+
+  setcurrentMediumIncobrand(data: any) {
+    this.currentMediumIncobrand.next(data)
+  }
+  getcurrentMediumIncobrand() {
+    return this.currentMediumIncobrand.asObservable();
+  }
+
+  // setSelectedEkyc(data:any){
+  //   this.selectedEkyc.next(data)
+  // }
+  // getSelectedEkyc(){
+  //   this.selectedEkyc.asObservable();
+  // }
+
+  setPortFolioAssetTypeDetails(value: any): void {
+    this.portFolioAssetTypeDetails$.next({ data: value });
+
+  }
+
+  getPortFolioAssetTypeDetails() {
+    return this.portFolioAssetTypeDetails$.asObservable();
+  }
+
+
+  setGenerateLinkResp(data: any) {
+    this.generateLinkResp.next(data)
+  }
+
+  getGenerateLinkResp(data: any) {
+    return this.generateLinkResp.asObservable();
+  }
+  setIsCommissionStatement(data: any) {
+    this.isCommissionStatement.next(data);
+  }
+  getIsCommissionStatement() {
+    return this.isCommissionStatement.asObservable();
+  }
+  setIsEkycGenOtpClicked(data: any) {
+    this.isEkycGenOtpClicked.next(data);
+  }
+  getIsEkycGenOtpClicked() {
+    return this.isEkycGenOtpClicked.asObservable();
+  }
+
+  setIsEkycInvesorGenOtpClicked(data: any) {
+    this.isEkycInvestorGenOtpClicked.next(data);
+  }
+  getIsEkycInvesorGenOtpClicked() {
+    return this.isEkycInvestorGenOtpClicked.asObservable();
+  }
+
+
+  setValidKydBankdetailsFlag(data: any) {
+    this.validKydBankdetailsFlag.next(data);
+  }
+  public setMt = new BehaviorSubject<any>(false);
+  public setProspect = new BehaviorSubject<boolean>(false);
+
+  getProspect() {
+    return this.setProspect.asObservable();
+  }
+  getMt() {
+    return this.setMt.asObservable();
+  }
+  getValidKydBankdetailsFlag() {
+    return this.validKydBankdetailsFlag.asObservable();
+  }
+  setCobrandedSelectedItem(data: any) {
+    this.cobradedSelectedItem.next(data)
+  }
+
+  getCobrandedSelectedItem() {
+    return this.cobradedSelectedItem.asObservable();
+  }
+  setRiseComplaintRef(data: any) {
+    this.riseComplaintRef.next(data);
+  }
+  getRiseComplaintRef() {
+    return this.riseComplaintRef.asObservable();
+  }
+
+  setDistributorRef(data: any) {
+    this.distributorhelpRef.next(data);
+  }
+  getDistributorRef() {
+    return this.distributorhelpRef.asObservable();
+  }
+  setEuinRegistration(type: any) {
+    this.euinRegistraion.next(type);
+  }
+
+  getEuinRegistration() {
+    return this.euinRegistraion.asObservable();
+  }
+  setTransactioType(type: any) {
+    this.setTransactionType.next(type);
+  }
+  getProfileDetails(): Observable<any> {
+    return this.profileDetails.asObservable();
+  }
+  setProfileDeatils(data: any) {
+    this.profileDetails.next({ data: data });
+  }
+  setrefNo(data: any) {
+    this.refDetails.next(data);
+  }
+  getrefNo() {
+    return this.refDetails.asObservable();
+  }
+
+  getTransactioType(): Observable<any> {
+    return this.setTransactionType.asObservable();
+  }
+
+  setSipLumpsPayment(data: any): void {
+    this.sipLumpsPayment.next({ lumps: data?.lumps, sip: data?.sip });
+  }
+
+  getSipLumpsPayment(): Observable<any> {
+    return this.sipLumpsPayment.asObservable();
+  }
+
+  setUinSubBrokerReview(data: any): void {
+    this.selectedUINReview.next({
+      uinno: data?.selectedEUIN,
+      subBroker: data?.subBrokerArnCode,
+    });
+  }
+
+  getUinSubBrokerReview(): Observable<any> {
+    return this.selectedUINReview.asObservable();
+  }
+
+  setFullFormShow(value: any): void {
+    this.fullFormShow.next({ showForm: value });
+  }
+
+  getFullFormShow(): Observable<any> {
+    return this.fullFormShow.asObservable();
+  }
+
+  setPaymentCheck(value: any): void {
+    this.paymentCheckIn.next({
+      payment: value.payment,
+      checkIn: value.checkIn,
+    });
+  }
+
+  getPaymentCheck(): Observable<any> {
+    return this.paymentCheckIn.asObservable();
+  }
+
+  setSipBank(value: any): void {
+    this.selectedSIPBank.next({ accno: value });
+  }
+
+  getSipBank(): Observable<any> {
+    return this.selectedSIPBank.asObservable();
+  }
+
+  setLumsBank(value: any): void {
+    this.selectedLumpsBank.next({ accno: value });
+  }
+
+  getLumsBank(): Observable<any> {
+    return this.selectedLumpsBank.asObservable();
+  }
+
+  setReference(value: any): void {
+    this.referenceNumber.next({ reference: value });
+  }
+  getReference(): Observable<any> {
+    return this.referenceNumber.asObservable();
+  }
+
+  setSipPayment(value: any): void {
+    this.setSipPaymentType.next({ type: value });
+  }
+
+  getSipPayment(): Observable<any> {
+    return this.setSipPaymentType.asObservable();
+  }
+
+  setLumpsPayment(value: any): void {
+    this.setLumpsPaymentType.next({ type: value });
+  }
+
+  getLumpsPayment(): Observable<any> {
+    return this.setLumpsPaymentType.asObservable();
+  }
+
+  setSTPFormData(value: any): void {
+    this.stpFormData.next({ data: value });
+  }
+
+  getSTPFormData(): Observable<any> {
+    return this.stpFormData.asObservable();
+  }
+  setSWPFormData(value: any): void {
+    this.swpFormData.next({ data: value });
+  }
+
+  getSWPFormData(): Observable<any> {
+    return this.swpFormData.asObservable();
+  }
+
+  //Todo : Redeem Shared Variable
+  setRedeemFormData(value: any): void {
+    this.redeemFomData.next({ data: value });
+  }
+  getRedeemFormData(): Observable<any> {
+    return this.redeemFomData.asObservable();
+  }
+  //Todo : Switch Shared Variable
+  setSwitchFormData(value: any): void {
+    this.switchFormData.next({ data: value });
+  }
+  getSwitchFormData(): Observable<any> {
+    return this.switchFormData.asObservable();
+  }
+  // Todo: Set the data for add new investor
+  setAddInvestorFormData(value: any): void {
+    this.addNewInvestorData.next({ data: value });
+  }
+  //Todo: Get the data for add new investor
+  getAddInvestorFormData(): Observable<any> {
+    return this.addNewInvestorData.asObservable();
+  }
+  // Todo: Set the data for add new investor
+  setAddSecInvestorFormData(value: any): void {
+    this.addSecInvestorData.next({ data: value });
+  }
+  //Todo: Get the data for add new investor
+  getAddSecInvestorFormData(): Observable<any> {
+    return this.addSecInvestorData.asObservable();
+  }
+  // Todo: Set the data for add new investor
+  setAddtertiaryInvestorFormData(value: any): void {
+    this.addtertiaryInvestorData.next({ data: value });
+  }
+  //Todo: Get the data for add new investor
+  getAddtertiaryInvestorFormData(): Observable<any> {
+    return this.addtertiaryInvestorData.asObservable();
+  }
+  // Todo: Set the data for add new investor
+  setAddNomineeFormData(value: any): void {
+    this.addNomineeData.next({ data: value });
+  }
+  //Todo: Get the data for add new investor
+  getAddNomineeFormData(): Observable<any> {
+    return this.addNomineeData.asObservable();
+  }
+  // Todo: Set the data for add new investor
+  setAddNomineeFormData2(value: any): void {
+    this.addNomineeData2.next({ data: value });
+  }
+  //Todo: Get the data for add new investor
+  getAddNomineeFormData2(): Observable<any> {
+    return this.addNomineeData2.asObservable();
+  }
+  // Todo: Set the data for add new investor
+  setAddNomineeFormData3(value: any): void {
+    this.addNomineeData3.next({ data: value });
+  }
+  //Todo: Get the data for add new investor
+  getAddNomineeFormData3(): Observable<any> {
+    return this.addNomineeData3.asObservable();
+  }
+  // Todo: Set the Bank Details for add new investor
+  setAddInvestorBankDetailsFormData(value: any): void {
+    this.addInvestorbankDetails.next({ data: value });
+  }
+  //Todo: Get the Bank Details for add new investor
+  getAddInvestorBankDetailsFormData(): Observable<any> {
+    return this.addInvestorbankDetails.asObservable();
+  }
+
+  setProfileImage(value: string): void {
+    this.setProfileUrl.next({ status: value });
+  }
+
+  getProfileImage(): Observable<any> {
+    return this.setProfileUrl.asObservable();
+  }
+
+  setMutliSchemeList(data: any) {
+    this.multiSchemeList.next(data);
+  }
+  getMultiSchemeList() {
+    return this.multiSchemeList;
+  }
+  setMutliSchemeItem(data: any) {
+    this.multiSchemeItem.next(data);
+  }
+  getMultiSchemeItem() {
+    return this.multiSchemeItem;
+  }
+
+  setMandateRegistrationDetails(value: any): void {
+    this.eMandateDetails.next({ data: value });
+  }
+
+  getMandateRegistrationDetails() {
+    return this.eMandateDetails.asObservable();
+  }
+
+  setApprovedMandateDetails(value: any): void {
+    this.eMandateApprovedDetails.next({ data: value });
+  }
+
+  getApprovedMandateDetails() {
+    return this.eMandateApprovedDetails.asObservable();
+  }
+
+  empanelmentPageOffset = 0;
+
+  getPlanType() {
+    return this.activePlan.asObservable();
+  }
+
+  setPlanType(data: any) {
+    this.activePlan.next(data);
+  }
+
+  getPlanDetails() {
+    return this.planDetails.asObservable();
+  }
+
+  setPlanDetails(data: any) {
+    this.planDetails.next(data);
+  }
+  setPauseDuration(data: any) {
+    this.pauseDuration.next(data);
+  }
+  getPauseDuration() {
+    return this.pauseDuration.asObservable();
+  }
+
+  setSubFundName(data: any) {
+    this.subFundName.next(data)
+  }
+  getSubFundName() {
+    return this.subFundName.asObservable();
+  }
+  setEkycInvestorApprovalParmsResponse(data: any) {
+    this.EkycInvestorApprovalParmsResponse.next(data);
+  }
+  getEkycInvestorApprovalParmsResponse() {
+    return this.EkycInvestorApprovalParmsResponse.asObservable();
+  }
+  getIsEkycInprocess() {
+    return this.isKycInProcess.asObservable();
+  }
+  setIsEkycInprocess(data: any) {
+    this.isKycInProcess.next(data);
+  }
+  getIsEkycVerified() {
+    return this.isKycAlreadyVerified.asObservable();
+  }
+  setIsEkycVerified(data: any) {
+    this.isKycAlreadyVerified.next(data);
+  }
+
+  setPreviousUrl(previousUrl: string) {
+    this.previousUrl.next(previousUrl);
+  }
+
+  setCurrentUrl(currentUrl: string) {
+    this.currentUrl.next(currentUrl);
+  }
+
+  getProspectFolioList() {
+    return this.prospectFolioList.asObservable();
+  }
+  setProspectFolioList(data: any) {
+    this.prospectFolioList.next(data);
+  }
+
+
+  openFatcaCompliancePopup(message: string,link : string) {
+    Swal.fire({
+      title: message,
+      showCancelButton: true,
+      cancelButtonText: 'Close',
+      confirmButtonText: 'Click here to update',
+      scrollbarPadding: false,
+      customClass: {
+        title: 'swal-title',
+        actions: 'swal-actions',
+        popup: 'swal-popup',
+        confirmButton: 'swal-confirm',
+        cancelButton: 'swal-cancel',
+      }
+    }).then((res: any) => {
+      if (res.isConfirmed) {
+        window.open('https://www.tatamutualfund.com/', '_blank');
+      }
+      else if (res.dismiss == 'cancel') {
+      }
+      else if (res.dismiss == 'esc') {
+      }
+    })
+  }
+
+}
+
+
+
+interface Reference {
+  reference: any;
+}
+
+interface Lums {
+  accno: any;
+}
+interface Sip {
+  accno: any;
+}
+interface Uin {
+  uinno: any;
+  subBroker: any;
+}
+interface Payment {
+  payment: any;
+  checkIn: boolean;
+}
+interface Slpayment {
+  lumps: string;
+  sip: string;
+}
+
+interface FullForm {
+  showForm: boolean;
+}
+
+interface PaymentOption {
+  type: string;
+}
+
+interface Stp {
+  data: {};
+}
+
+interface ProspectFolio {
+  data: [];
+}
+
+interface Swp {
+  data: {};
+}
+
+interface Redeem {
+  data: {};
+}
+
+interface Switch {
+  data: {};
+}
+
+interface addInvestor {
+  data: {};
+}
+interface addNominee {
+  data: {};
+}
+
+interface bankDetails {
+  data: {};
+}
+
+interface Status {
+  status: string;
+}
+
+interface mandate {
+  data: {};
+}
+
+========================================================================================================
+
+Transaction.service:
+	
+
+getTransactionHistoryExcelDownload(body: TransactionHistory): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<any>(Urls.transactionHistoryExcelDownload, body, { responseType: 'blob' as any, headers });
+  }
+
+
+
+getTransactionHistoryEmail(body: TransactionHistory): Observable<any> {
+    return this.http.post<any>(Urls.transactionHistoryEmail, body);
+  }
+
+
+URL.ts:
+
+	import { environment } from '@env/environment';
+
+export class Urls {
+  /* Internal APIs */
+
+  // Online Empanelment
+
+  static isDummy = localStorage.getItem('isDummy') === '1' ? 'dummy/' : '';
+
+  public static readonly empanelmentSelectKydBank = `${environment.baseUrl}/api/v1/general/dist/arn-empanelment-selectKydBank`;
+  public static readonly empanelmentCreateBroker = `${environment.baseUrl}/api-public/v1/nontransaction/dist/arn-empanelment-createbroker`;
+}
+
+
+
+
+Modal:
+	<div id="pending-kyc-verification-popup" class="reject-popup-modal modal center overlay">
+  		<div class="modal-container">
+		</div>
+	</div>
+
+CSS:
+.modal {
+  &-container {
+    // min-width: 650px;
+    width: 650px;
+    height: auto;
+    margin: auto;
+    background: var(--white);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    position: relative;
+    .btn-icon{
+      position: absolute;
+      right: 0;
+      padding: 19px
+    }
+  }
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1051;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  &.overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  &.center {
+    margin: auto;
+  }
+  &.white-modal {
+    background: var(--white);
+    box-shadow: 0px 8px 40px rgba(37, 38, 94, 0.1);
+    border-radius: 16px;
+  }
+}
+
+
+Otp Modal:\
+
+TS:
+	import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import {
+  AuthenticationService,
+  BaseComponent,
+  DistributorGenOtpReq,
+  DistributorValidateOtpReq,
+  InvestorApprovalRequest,
+  SharedVariablesService,
+  TransactionDetailsReq,
+  TransactionService,
+  MaskMobile, MaskEmail
+} from '@nextgenmf-apps/nextgenmf-core';
+
+import {
+  countDownTimer,
+  detectBrowserName,
+} from '@nextgenmf-apps/nextgenmf-core';
+import { NgOtpInputConfig } from 'ng-otp-input';
+import { ToastrService } from 'ngx-toastr';
+import { takeUntil } from 'rxjs';
+
+@Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'nextgenmf-apps-otp-popup',
+  templateUrl: './otp-popup.component.html',
+  styleUrls: ['./otp-popup.component.scss'],
+})
+export class OtpPopupComponent extends BaseComponent implements OnInit {
+  @ViewChild('ngOtpInput') ngOtpInputRef: any;
+  otpConfig: NgOtpInputConfig = {
+    length: 5,
+    allowNumbersOnly: true,
+    inputStyles: {
+      width: '5rem !important',
+      height: '3rem !important',
+      'font-size': '1.2rem !important',
+    },
+    inputClass: 'otp-password-input',
+  };
+  isResend = false;
+  seconds: any;
+  minutes: any;
+  browserName = '';
+  investorDetails: any;
+  otp: any;
+  investorMobile: any;
+  investorEmail: any;
+  readonly maxTime = 10;
+  simpleInterval: any;
+  timeLeft = this.maxTime;
+  display: any;
+  isAddNewInvestor = false;
+  inverstorType: any;
+  isVerifyEnable = false;
+  transactionType: any;
+  constructor(
+    private route: Router,
+    private sharedVariablesService: SharedVariablesService,
+    private authenticationService: AuthenticationService,
+    private toastr: ToastrService,
+    private transactionService: TransactionService,
+    private activatedRoute: ActivatedRoute,
+  ) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.transactionType = params['transaction_type'];
+    });
+    this.initOTPConfig();
+    this.subscribes()
+    const obj = {
+      timerInSeconds: 30,
+    };
+    this.countDownTimerHandler(obj);
+    // this.startTimer();
+  }
+
+  // ngAfterViewInit() {
+  //   this.restartTimer()
+  // }
+  subscribes() {
+
+    this.sharedVariablesService.transactionDetails$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((transactionInfo) => {
+        if (transactionInfo) {
+          this.investorDetails = transactionInfo.transactionInfo;
+          this.investorMobile = this.sharedVariablesService.investorOtpMobile;
+          this.investorEmail = this.sharedVariablesService.investorOtpEmail;
+          this.isAddNewInvestor = this.sharedVariablesService.isAddNewInvetor
+        }
+        this.restartTimer()
+        this.isResend = false;
+      });
+
+  }
+
+  initOTPConfig() {
+    this.browserName = detectBrowserName();
+    if (this.browserName == 'safari') {
+      this.otpConfig = {
+        length: 5,
+        allowNumbersOnly: true,
+        inputStyles: {
+          width: '4.5rem',
+          height: '3rem',
+          'font-size': '1.2rem',
+        },
+        inputClass: 'otp-password-input',
+      };
+    } else {
+      this.otpConfig = {
+        length: 5,
+        allowNumbersOnly: true,
+        inputStyles: {
+          width: '4.7rem',
+          height: '3rem',
+          'font-size': '1.2rem',
+        },
+        inputClass: 'otp-password-input',
+      };
+    }
+  }
+
+  focusOtherInput(event: any) {
+    event.preventDefault();
+  }
+
+  onOtpEnter(otp: string) {
+    this.isVerifyEnable = otp.length === 5 ? true : false;
+    this.otp = otp;
+    // if (otp.length === 5) {
+    //   this.otp = otp;
+    //   if (this.minutes <= 0 && this.seconds <= 0) {
+    //     this.toastr.error('', 'OTP expired', {
+    //       positionClass: 'toast-top-full-width',
+    //     });
+    //   }
+    // }
+  }
+
+  onClose() {
+    // const obj = {
+    //   timerInSeconds: -1,
+    // };
+    // this.countDownTimerHandler(obj);
+
+    // setTimeout(() => {
+    const modal = document.getElementById('otp-modal');
+    if (modal) {
+      this.pauseTimer()
+      modal.style.display = 'none';
+      this.ngOtpInputRef.setValue('');
+    }
+    // }, 0);
+
+  }
+
+  countDownTimerHandler(reqObj: any) {
+    countDownTimer(reqObj.timerInSeconds, (timer: any) => {
+      this.minutes =
+        String(timer.minutes).length == 1 ? '0' + timer.minutes : timer.minutes;
+      this.seconds =
+        String(timer.seconds).length == 1 ? '0' + timer.seconds : timer.seconds;
+      // this.isResend = this.minutes === '00' && this.seconds === '00';
+    });
+  }
+
+  @HostListener('document:keydown', ['$event']) handleKeyboardEvent(event: KeyboardEvent) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+      event.preventDefault();
+      this.ngOtpInputRef.setValue('');
+      this.toastr.error('Paste is disabled');
+    }
+  }
+
+  @HostListener('contextmenu', ['$event'])
+  onRightClick($event: any) {
+    $event.preventDefault();
+    //this.toastr.error('Right Click is disabled in this page');
+  }
+
+  onResendOTP() {
+    let activityType;
+    if(this.investorDetails?.transactionType === 'Update Email') {
+      activityType = 'OTP_FOR_INVESTOR_MOBILE';
+    } else if(this.investorDetails?.transactionType === 'Update Mobile') {
+      activityType = 'OTP_FOR_INVESTOR_EMAIL';
+    } else {
+      activityType = 'OTP_FOR_INVESTOR';
+    }
+    this.ngOtpInputRef.setValue('');
+    const reqPayload: DistributorGenOtpReq = {
+      arnCode: this.investorDetails.arnCode,
+      euinCode: this.investorDetails.euin,
+      riaCode: this.investorDetails.riaCode,
+      source: "WEB",
+      activityType: activityType,
+      countryCode: "91",
+      referenceNumber: this.investorDetails.genOtpReferenceNumber,
+      distributorName: this.investorDetails.distributorName,
+      investorPan: this.investorDetails.investorPan
+    };
+    this.authenticationService.distributorGenOtp(reqPayload).subscribe({
+      next: (res: any) => {
+        if (res?.resultInfo?.status == 'S') {
+          this.toastr.success('', res.resultInfo.message);
+          this.investorDetails.genOtpReferenceNumber = res?.data?.referenceNumber
+          const modal = document.getElementById('otp-modal');
+          if (modal) {
+            modal.style.display = 'flex';
+          }
+          this.restartTimer();
+          this.isResend = false;
+          // this.countDownTimerHandler({
+          //   timerInSeconds: 30,
+          // });
+
+        } else {
+          this.toastr.error('', res?.resultInfo?.message);
+        }
+      }, error: (err) => {
+        this.toastr.error('Failure', 'Invalid Server Message');
+      }
+    });
+  }
+
+  onVerifyOTP() {
+    this.onVerifyOTPApi();
+  }
+  onVerifyOTPApi() {
+
+    // Todo: Gopi - Test
+    // this.onClose();
+    // this.route.navigateByUrl('investor/review');
+
+
+    // if (this.isAddNewInvestor) {
+    //   this.onClose();
+    //   this.route.navigate(['/investor/investor-approval/personal-details'])
+    // }
+
+
+
+    // else {
+    const reqPayload: DistributorValidateOtpReq = {
+      otp: this.otp,
+      source: 'WEB',
+      activityType: "OTP_FOR_INVESTOR",
+      referenceNumber: this.investorDetails.genOtpReferenceNumber
+
+    };
+    this.authenticationService.distributorValidateOtp(reqPayload).subscribe({
+      next: (res: any) => {
+        if (res?.resultInfo?.status == 'S') {
+          this.investorDetails.validateReferenceNumber = res?.data?.referenceNumber;
+          // this.toastr.success('', res.resultInfo.message);
+          this.onClose();
+          // if(this.route.url == "/investor/review"){
+          //   this.route.navigateByUrl('investor/payment-status');
+          // // }
+          // else{
+          if (this.isAddNewInvestor) {
+            this.route.navigate(['/investor/investor-approval/personal-details'])
+          } else {
+            this.route.navigateByUrl('investor/review');
+          }
+
+          // }
+
+          // if (this.title === 'Enter OTP') {
+          //   this.otpInfo.validateReferenceNumber = res?.data?.referenceNumber;
+          //   // this.otpInfo.setPasswordTitle = this.title
+          //   this.sharedVariables.LoginDetailsInfo = this.otpInfo;
+          //   // this.afterOtpEntered.emit(true);
+          //   this.router.navigateByUrl('/home');
+          // } else {
+          //   this.otpInfo.validateReferenceNumber = res?.data?.referenceNumber;
+          //   // this.otpInfo.setPasswordTitle = this.title
+          //   this.sharedVariables.LoginDetailsInfo = this.otpInfo;
+          //   this.afterOtpEntered.emit(true);
+          // }
+        } else {
+          this.toastr.error('', res?.resultInfo?.message);
+        }
+      },
+      error: (err) => {
+        this.toastr.error('Failure', 'Invalid Response');
+      },
+    });
+
+    // }
+  }
+  startTimer() {
+    clearInterval(this.simpleInterval);
+    this.simpleInterval = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        // this.timeLeft = 60;
+        this.isResend = true;
+      }
+      this.display = this.transform(this.timeLeft);
+    }, 1000)
+  }
+
+  transform(value: number): string {
+    this.minutes = Math.floor(value / 60);
+    this.seconds = value % 60;
+    this.minutes =
+      String(this.minutes).length == 1 ? '0' + this.minutes : this.minutes;
+    this.seconds =
+      String(this.seconds).length == 1 ? '0' + this.seconds : this.seconds;
+    // this.isResend = this.minutes === '00' && this.seconds === '00';
+    return this.minutes + ':' + this.seconds;
+  }
+
+  restartTimer() {
+    this.timeLeft = 120;// todo: need to change to 120 secf
+    this.display = "02: 00"
+    this.startTimer();
+  }
+
+  pauseTimer() {
+    clearInterval(this.simpleInterval);
+  }
+  
+  @HostListener('document:keydown.enter') keydata() {
+    if(this.isVerifyEnable){
+      this.onVerifyOTP();
+    }
+  }
+
+}
+
+HTML:
+	<ng-otp-input #ngOtpInput (onInputChange)="onOtpEnter($event)" [config]="otpConfig"
+        (keydown.dot)="focusOtherInput($event)">
+      </ng-otp-input>
+
+
+package.json:
+	{
+  "name": "nextgenmf-apps",
+  "version": "0.0.90",
+  "license": "MIT",
+  "scripts": {
+    "ng": "nx",
+    "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2020 browser module main",
+    "start": "nx serve",
+    "build": "nx build",
+    "test": "nx test",
+    "json:server": "json-server --watch mock/db.json --routes mock/routes.json"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular-slider/ngx-slider": "^2.0.4",
+    "@angular/animations": "~14.0.0",
+    "@angular/cdk": "^14.2.7",
+    "@angular/common": "~14.0.0",
+    "@angular/compiler": "~14.0.0",
+    "@angular/core": "~14.0.0",
+    "@angular/flex-layout": "^14.0.0-beta.40",
+    "@angular/forms": "~14.0.0",
+    "@angular/platform-browser": "~14.0.0",
+    "@angular/platform-browser-dynamic": "~14.0.0",
+    "@angular/router": "~14.0.0",
+    "@ckeditor/ckeditor5-build-classic": "^36.0.1",
+    "@katoid/angular-grid-layout": "^1.2.0",
+    "@kolkov/angular-editor": "^3.0.0-beta.0",
+    "@ng-select/ng-select": "^9.0.2",
+    "@ngx-translate/core": "^14.0.0",
+    "@ngx-translate/http-loader": "^7.0.0",
+    "bn-ng-idle": "^2.0.4",
+    "chart.js": "^3.9.1",
+    "crypto-js": "^4.1.1",
+    "dayjs": "^1.11.7",
+    "file-saver": "^2.0.5",
+    "jsencrypt": "^3.3.2",
+    "json-server": "^0.17.0",
+    "lottie-web": "^5.9.6",
+    "moment": "^2.29.4",
+    "ng-circle-progress": "^1.7.1",
+    "ng-otp-input": "^1.8.5",
+    "ng-recaptcha": "^10.0.0",
+    "ng2-charts": "^4.0.1",
+    "ng2-datepicker": "^12.0.0",
+    "ng2-pdf-viewer": "^9.1.5",
+    "ng2-tooltip-directive": "^2.10.3",
+    "ngx-chips": "^3.0.0",
+    "ngx-daterangepicker-material": "^6.0.4",
+    "ngx-doc-viewer": "^15.0.1",
+    "ngx-extended-pdf-viewer": "18.0.1",
+    "ngx-filesaver": "^16.0.0",
+    "ngx-lottie": "^9.0.1",
+    "ngx-pagination": "^6.0.3",
+    "ngx-pdf-viewer": "^0.0.0",
+    "ngx-toastr": "^15.0.0",
+    "ngx-ui-loader": "^13.0.0",
+    "ngx-useful-swiper": "^10.0.1",
+    "numeral": "^2.0.6",
+    "rxjs": "~7.4.0",
+    "sweetalert2": "^11.5.0",
+    "swiper": "^6.8.4",
+    "to-words": "^3.3.0",
+    "tslib": "^2.0.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~14.0.0",
+    "@angular-eslint/eslint-plugin": "~14.0.0",
+    "@angular-eslint/eslint-plugin-template": "~14.0.0",
+    "@angular-eslint/template-parser": "~14.0.0",
+    "@angular/cli": "~14.0.0",
+    "@angular/compiler-cli": "~14.0.0",
+    "@angular/language-service": "~14.0.0",
+    "@nrwl/angular": "^14.4.3",
+    "@nrwl/cli": "14.4.3",
+    "@nrwl/cypress": "14.4.3",
+    "@nrwl/eslint-plugin-nx": "14.4.3",
+    "@nrwl/jest": "14.4.3",
+    "@nrwl/linter": "14.4.3",
+    "@nrwl/workspace": "14.4.3",
+    "@types/crypto-js": "^4.1.3",
+    "@types/jest": "27.4.1",
+    "@types/node": "16.11.7",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "cypress": "^9.1.0",
+    "eslint": "~8.15.0",
+    "eslint-config-prettier": "8.1.0",
+    "eslint-plugin-cypress": "^2.10.3",
+    "jest": "27.5.1",
+    "jest-preset-angular": "~11.1.2",
+    "json-server": "^0.17.0",
+    "nx": "14.4.3",
+    "prettier": "^2.6.2",
+    "ts-jest": "27.1.4",
+    "ts-node": "~10.8.0",
+    "typescript": "~4.7.2"
+  }
+}
+These are the pages:
+
+Upload a csv file
+
+
+
+
